@@ -5,6 +5,7 @@ var nb = require("josm/builder").NodeBuilder;
 var activeLayer = layers.activeLayer;
 util.assert(activeLayer != null, "No activeLayer!");
 var ds = activeLayer.data;
+var JOptionPane = javax.swing.JOptionPane;
 
 function print_ids(way) {
     var nodes = way.getNodes();
@@ -82,7 +83,7 @@ function get_tags(entr_string) {
 function add_entrances(arr_entr_str) {
     var sel_len = ds.selection.nodes.length;
     if(sel_len != 2) {
-        josm.alert("Не выделены две точки крайних подъездов");
+        JOptionPane.showMessageDialog(null, "Не выделены две точки крайних подъездов");
         return;
     }
 
@@ -92,13 +93,13 @@ function add_entrances(arr_entr_str) {
     //являются ли соседними выбранные точки?
     var parent_ways = n1.getParentWays();
     if(parent_ways.isEmpty()) {
-        josm.alert("Не найден parent way у выделенной точки");
+        JOptionPane.showMessageDialog(null, "Не найден parent way у выделенной точки");
         return;
     }
     var build = parent_ways.get(0);
     var neigs = build.getNeighbours(n1).toArray();
     if( neigs[0].id != n2.id && neigs[1].id != n2.id ) {
-        josm.alert("Выделенные точки не соседние");
+        JOptionPane.showMessageDialog(null, "Выделенные точки не соседние");
         return;
     }
 
