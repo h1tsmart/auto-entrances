@@ -70,7 +70,11 @@ function add_entrance(n1,n2,ll1,ll2,proportion,tags) {
 //парсит строку вида "2:109-144" и возвращает теги подъезда
 function get_tags(entr_string) {
     var entr = entr_string.split(":");
-    var tags = {"entrance": "staircase", "ref": entr[0],"addr:flats": entr[1].trim() };
+    var tags = {"entrance": "staircase"};
+    if(entr[0]!="")
+        tags["ref"] = entr[0];
+    if(entr[1]!="")
+        tags["addr:flats"] = entr[1];
     return tags;
 }
 
