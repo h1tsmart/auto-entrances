@@ -136,10 +136,12 @@ function show_UI(nodes, f_edit,f_gen) {
     var jt1 = new JTextField(nodes.length,2);
     jt1.setToolTipText("Кол-во подъездов");
     jt1.setEditable(false);
-    var jt2 = new JTextField("36",3);
-    jt2.setToolTipText("Кол-во квартир в каждом подъезде");
-    var jt3 = new JTextField("1",3);
-    jt3.setToolTipText("Начальный номер квартиры");
+    var jt2 = new JTextField(1,2);
+    jt2.setToolTipText("Начальный номер подъездов");
+    var jt3 = new JTextField("36",3);
+    jt3.setToolTipText("Кол-во квартир в каждом подъезде");
+    var jt4 = new JTextField("1",3);
+    jt4.setToolTipText("Начальный номер квартиры");
 
     // var ta = new JTextArea("1:1-36\n2:37-72");
     var text = get_text_from_entrances(nodes);
@@ -148,13 +150,11 @@ function show_UI(nodes, f_edit,f_gen) {
     var b_gen = new JButton("Генерировать");
 
     button.addActionListener(function() {
-        //util.println("click {0}",ta.getText());
         f_edit(nodes, ta.getText());
     });
 
     b_gen.addActionListener(function() {
-        //util.println("click {0}",ta.getText());
-        var new_text = f_gen(jt1.getText(),jt2.getText(),jt3.getText());
+        var new_text = f_gen(jt1.getText(),jt2.getText(),jt3.getText(),jt4.getText());
         ta.setText(new_text);
     });
 
@@ -170,6 +170,7 @@ function show_UI(nodes, f_edit,f_gen) {
                     .addComponent(jt1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,GroupLayout.PREFERRED_SIZE)
                     .addComponent(jt2,GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,GroupLayout.PREFERRED_SIZE)
                     .addComponent(jt3,GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jt4,GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,GroupLayout.PREFERRED_SIZE)
                     .addComponent(b_gen)
             )
             .addComponent(ta)
@@ -183,6 +184,7 @@ function show_UI(nodes, f_edit,f_gen) {
                     .addComponent(jt1,GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,GroupLayout.PREFERRED_SIZE)
                     .addComponent(jt2,GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,GroupLayout.PREFERRED_SIZE)
                     .addComponent(jt3,GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jt4,GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,GroupLayout.PREFERRED_SIZE)
                     .addComponent(b_gen))
             .addComponent(ta)
             .addComponent(button)
@@ -190,9 +192,7 @@ function show_UI(nodes, f_edit,f_gen) {
 
     frame.pack();
     frame.setLocationRelativeTo(null);
-    // frame.setSize(frame.getSize().width, 300);
     frame.getRootPane().setDefaultButton(b_gen);
-
 
     frame.setVisible(true);
     ta.requestFocus();
@@ -202,19 +202,19 @@ function show_UI(nodes, f_edit,f_gen) {
 function proc(nodes, text) {
     var arr = text.split("\n");
     var native_arr = new org.mozilla.javascript.NativeArray(arr);
-    // add_entrances(native_arr);
-    edit_entrances(nodes,native_arr);
+    edit_entrances(nodes, native_arr);
 }
 
-function gen(entr_num,flats_in_entr,start_flat) {
+function gen(entr_num,start_entr,flats_in_entr,start_flat) {
     var text = "";
 
     var cur_start_flat = Number(start_flat);
     flats_in_entr = Number(flats_in_entr);
+    start_entr = Number(start_entr);
 
     for (var i=1; i<=entr_num; i++) {
         var cur_end_flat = cur_start_flat+flats_in_entr - 1;
-        text = text +i+":" + cur_start_flat +"-" + cur_end_flat ;
+        text = text +( i + start_entr - 1 )+":" + cur_start_flat +"-" + cur_end_flat ;
         if(i!=entr_num)
             text = text + "\n";
         cur_start_flat += flats_in_entr;
@@ -241,5 +241,4 @@ if(nodes_len == 2 && ways_len == 1) {
     nodes = get_entrances_from_build(nodes, build);
 }
 
-// print_arr(nodes,"nodes");
-show_UI(nodes, proc,gen);
+show_UI(nodes, proc, gen);

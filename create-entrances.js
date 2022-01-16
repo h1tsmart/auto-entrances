@@ -41,29 +41,20 @@ function add_entrance(n1,n2,ll1,ll2,proportion,tags) {
     new_n.tags = tags;
 
     if(min_offset==0 && max_offset==1) {
-        //build.addNode(1,new_n);
         b_nodes.add(1,new_n);
-        //util.println("addNode({0},new_n)",1);
     }
     else if(min_offset==0) {
-        //build.addNode(max_offset+1,new_n);
         b_nodes.add(max_offset+1,new_n);
-        //util.println("addNode({0},new_n)",max_offset+1);
     }
     else {
-        //build.addNode(min_offset+1, new_n);
         b_nodes.add(min_offset+1,new_n);
-        //util.println("addNode({0},new_n)",min_offset+1);
     }
-
-    //util.println("\n\n nodes {0}",{nodes: b_nodes});
 
     activeLayer.apply(
         cmd.add(new_n),
         cmd.change(build,{nodes: b_nodes.toArray()})
     );
 
-    //print_ids(build);
 
     return new_n; //возвращаем созданную новую точку
 }
@@ -138,27 +129,26 @@ function show_UI(f_create,f_gen) {
 
     var frame = new JFrame();
     frame.setTitle("Подъезды");
-    //frame.setSize(260,300);
 
     var jt1 = new JTextField("5",2);
     jt1.setToolTipText("Кол-во подъездов");
-    var jt2 = new JTextField("36",3);
-    jt2.setToolTipText("Кол-во квартир в каждом подъезде");
-    var jt3 = new JTextField("1",3);
-    jt3.setToolTipText("Начальный номер квартиры");
+    var jt2 = new JTextField(1,2);
+    jt2.setToolTipText("Начальный номер подъездов");
+    var jt3 = new JTextField("36",3);
+    jt3.setToolTipText("Кол-во квартир в каждом подъезде");
+    var jt4 = new JTextField("1",3);
+    jt4.setToolTipText("Начальный номер квартиры");
 
     var ta = new JTextArea("1:1-36\n2:37-72");
     var button = new JButton("Создать");
     var b_gen = new JButton("Генерировать");
 
     button.addActionListener(function() {
-        //util.println("click {0}",ta.getText());
         f_create(ta.getText());
     });
 
     b_gen.addActionListener(function() {
-        //util.println("click {0}",ta.getText());
-        var new_text = f_gen(jt1.getText(),jt2.getText(),jt3.getText());
+        var new_text = f_gen(jt1.getText(),jt2.getText(),jt3.getText(),jt4.getText());
         ta.setText(new_text);
     });
 
@@ -174,6 +164,7 @@ function show_UI(f_create,f_gen) {
                     .addComponent(jt1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,GroupLayout.PREFERRED_SIZE)
                     .addComponent(jt2,GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,GroupLayout.PREFERRED_SIZE)
                     .addComponent(jt3,GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jt4,GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,GroupLayout.PREFERRED_SIZE)
                     .addComponent(b_gen)
             )
             .addComponent(ta)
@@ -187,6 +178,7 @@ function show_UI(f_create,f_gen) {
                     .addComponent(jt1,GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,GroupLayout.PREFERRED_SIZE)
                     .addComponent(jt2,GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,GroupLayout.PREFERRED_SIZE)
                     .addComponent(jt3,GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jt4,GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,GroupLayout.PREFERRED_SIZE)
                     .addComponent(b_gen))
             .addComponent(ta)
             .addComponent(button)
@@ -208,15 +200,16 @@ function proc(text) {
     add_entrances(native_arr);
 }
 
-function gen(entr_num,flats_in_entr,start_flat) {
+function gen(entr_num,start_entr,flats_in_entr,start_flat) {
     var text = "";
 
     var cur_start_flat = Number(start_flat);
     flats_in_entr = Number(flats_in_entr);
+    start_entr = Number(start_entr);
 
     for (var i=1; i<=entr_num; i++) {
         var cur_end_flat = cur_start_flat+flats_in_entr - 1;
-        text = text +i+":" + cur_start_flat +"-" + cur_end_flat ;
+        text = text +( i + start_entr - 1)+":" + cur_start_flat +"-" + cur_end_flat ;
         if(i!=entr_num)
             text = text + "\n";
         cur_start_flat += flats_in_entr;
@@ -225,4 +218,4 @@ function gen(entr_num,flats_in_entr,start_flat) {
     return text;
 }
 
-show_UI(proc,gen);
+show_UI(proc, gen);
